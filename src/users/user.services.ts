@@ -20,7 +20,7 @@ const login = async (credentials: Omit<IUser, 'name'>) => {
             return { token };
         }
 	} catch (err: any) {
-		if (err.statusCode) throw err;
+		if (err?.statusCode) throw err;
 		throw userResponses.SERVER_ERR;
 	}
 };
@@ -28,7 +28,7 @@ const login = async (credentials: Omit<IUser, 'name'>) => {
 const signup = async (userData: IUser) => {
 	try {
 		const user = await userRepo.findUser({email: userData.email});
-		if (user) throw userResponses.USER_ALREADY_REGISTERED;
+		if (user) throw userResponses.ALREADY_REGISTERED;
 
 		const encryptedPassword = await encrypt(userData.password);
 		userData = { ...userData, password: encryptedPassword };
@@ -37,7 +37,7 @@ const signup = async (userData: IUser) => {
 		
         return userResponses.SIGNUP_SUCCESSFUL;
 	} catch (err: any) {
-		if (err.statusCode) throw err;
+		if (err?.statusCode) throw err;
 		throw userResponses.SERVER_ERR;
 	}
 };
