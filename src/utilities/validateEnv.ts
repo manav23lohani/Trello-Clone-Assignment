@@ -21,9 +21,4 @@ declare global {
 	namespace NodeJS {
 		export interface ProcessEnv extends Env {}
 	}
-	namespace Express{
-		interface Request{
-			user: string;
-		}
-	}
 }

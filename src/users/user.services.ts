@@ -12,10 +12,9 @@ const login = async (credentials: Omit<IUser, 'name'>) => {
 		    const didMatch = await compare(credentials.password, user.password);
             if (!didMatch) throw userResponses.INVALID_CREDENTIALS;
 
-            const { email, name } = user;
             const { JWT_SECRET } = process.env;
             
-            const token = jwt.sign({ name, email }, JWT_SECRET || "");
+            const token = jwt.sign({ _id: user._id }, JWT_SECRET, {expiresIn: '1d'});
             
             return { token };
         }
