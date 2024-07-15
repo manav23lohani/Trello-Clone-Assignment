@@ -1,9 +1,5 @@
-interface IResponses {
-	[key: string]: {
-		statusCode: number;
-		message: string;
-	};
-}
+import { IResponses } from "../utilities/responses.type";
+
 export const userResponses: IResponses = {
 	SERVER_ERR: {
 		statusCode: 500,

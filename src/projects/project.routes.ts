@@ -2,7 +2,7 @@ import { Router } from "express";
 import { Route } from "../routes/routes.types";
 import projectServices from "./project.services";
 import { validator } from "../utilities/validator";
-import { ZProject } from "./project.types";
+import { IProject, ZProject } from "./project.types";
 
 const router = Router();
 
@@ -20,9 +20,9 @@ router.get("/", async(req, res, next)=>{
 
 router.get("/:id", async(req, res, next)=>{
     try{
-        const userId = req.user._id, projectId = req.params.id;
+        const projectId = req.params.id;
 
-        const response = await projectServices.getProjectByIdAndUser(userId, projectId);
+        const response = await projectServices.getProjectById(projectId);
         res.send(response);
     }catch(e){
         next(e);
@@ -31,10 +31,9 @@ router.get("/:id", async(req, res, next)=>{
 
 router.post("/", validator("body", ZProject), async(req, res, next)=>{
     try{
-        const name: string = req.body.name, description: string = req.body.description;
-        const createdBy: string = req.user._id;
-        
-        const response = await projectServices.addProject(name, description, createdBy);
+        const projectData: IProject = req.body;
+        projectData.createdBy = req.user._id;
+        const response = await projectServices.addProject(projectData);
 
         res.send(response);
     }catch(e){

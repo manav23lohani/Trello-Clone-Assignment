@@ -1,23 +1,23 @@
 import { Types } from "mongoose";
 import projectRepo from "./project.repo";
 import { projectResponses } from "./project.responses";
+import { IProject } from "./project.types";
 
 const getAllProjectsOfUser = async (userid: string, page: number, limit: number) => {
     try {
         const userId = new Types.ObjectId(userid);
-        const projects = await projectRepo.getAllProjectsOfUser(userId, { page, limit });
+        const projects = await projectRepo.getAllProjectsOfUser(userId, page, limit );
         return projects;
     } catch (err: any) {
         throw projectResponses.SERVER_ERR;
     }
 };
 
-const getProjectByIdAndUser = async (userid: string, projectid: string) => {
+const getProjectById = async (projectid: string) => {
     try {
-        const userId = new Types.ObjectId(userid);
         const projectId = new Types.ObjectId(projectid);
 
-        const project = await projectRepo.getProjectByIdAndUser(userId, projectId);
+        const project = await projectRepo.getProjectById(projectId);
 
         if (!project) {
             throw projectResponses.NOT_FOUND;
@@ -30,8 +30,10 @@ const getProjectByIdAndUser = async (userid: string, projectid: string) => {
     }
 };
 
-const addProject = async(name: string, description: string, createdBy: string) => {
+const addProject = async(projectData: IProject) => {
     try{
+        const {name, description, createdBy} = projectData;
+        
         const userId = new Types.ObjectId(createdBy);
 
         await projectRepo.addNewProject(name, description, userId);
@@ -42,4 +44,4 @@ const addProject = async(name: string, description: string, createdBy: string) =
     }
 };
 
-export default {getAllProjectsOfUser, getProjectByIdAndUser, addProject};
+export default {getAllProjectsOfUser, getProjectById, addProject};
